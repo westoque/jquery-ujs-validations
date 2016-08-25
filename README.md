@@ -18,7 +18,7 @@ Installation
 
 We currently only support bower as of this moment.
 
-    bower install jquery_ujs_validations
+    bower install jquery-ujs-validations
 
 ## Usage
 
