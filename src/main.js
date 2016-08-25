@@ -35,16 +35,31 @@
 
   var $document = $(document);
 
+  // "blur" for <input type="text" />
   $document.on("blur.rails", "form[data-remote-validation-url] input[type=text]", function(evt) {
     var $currentTarget = $(evt.currentTarget);
     doRemoteValidationRequest($currentTarget);
   });
 
+  // "blur" for <textarea>
+  $document.on("blur.rails", "form[data-remote-validation-url] textarea", function(evt) {
+    var $currentTarget = $(evt.currentTarget);
+    doRemoteValidationRequest($currentTarget);
+  });
+
+  // "blur" for <select>
+  $document.on("blur.rails", "form[data-remote-validation-url] select", function(evt) {
+    var $currentTarget = $(evt.currentTarget);
+    doRemoteValidationRequest($currentTarget);
+  });
+
+  // "change" for <select>
   $document.on("change.rails", "form[data-remote-validation-url] select", function(evt) {
     var $currentTarget = $(evt.currentTarget);
     doRemoteValidationRequest($currentTarget);
   });
 
+  // "change" for <input type="radio">
   $document.on("change.rails", "form[data-remote-validation-url] input[type=radio]", function(evt) {
     var $currentTarget = $(evt.currentTarget);
     doRemoteValidationRequest($currentTarget);
