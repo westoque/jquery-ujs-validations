@@ -1,0 +1,17 @@
+{
+  "name": "jquery-ujs-validations",
+  "authors": [
+    "William Estoque <william.estoque@gmail.com>"
+  ],
+  "description": "Allows remote validation of form fields using unobtrusive javascript and beautiful rails patterns.",
+  "main": "src/main.js",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
