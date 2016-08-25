@@ -92,13 +92,13 @@ And in your controller
     end
 
 
-## Customization
+## View Customization
 
 The default error handling behavior is to wrap the `<input>` with `<div class="field_with_errors">`. If you want to customize this behavior, you should listen to the `errors:field` event, and add your own custom handler.
 
 Here's an example when using bootstrap:
 
-    $("form[remote_validation_url]").on("errors:field", function(jqEl, errors) {
+    $(document).on("errors:field", "form[data-remote-validation-url]", function(evt, jqEl, errors) {
       if (errors.length > 0) {
         console.log("has errors");
       } else {
