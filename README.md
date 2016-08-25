@@ -22,7 +22,7 @@ We currently only support bower as of this moment.
 
 ## Usage
 
-General usage is just to add the data attribute `remote_validation_url` and the `validate` method in your controller and everything should just work out of the box.
+General usage is just to add the data attribute `remote_validation_url` with the url for the validation to the `<form>` and add the `validate` method in your controller and everything should just work out of the box.
 
 ### Usage with `form_for`
 
@@ -42,7 +42,7 @@ In your view
     <% end %>
 
 
-And in your controller, you **SHOULD** namespace your model when using returning a json response.
+And in your controller, you **SHOULD** namespace your model when returning a json response.
 
     # controllers/contacts_controller.rb
 
@@ -94,13 +94,15 @@ And in your controller
 
 ## Customization
 
-The default error handling behavior is to wrap the `<input>` with `<div class="field_with_errors">`. If you want to customize this behavior, you should edit the `handleError` option, and add your own custom handler.
+The default error handling behavior is to wrap the `<input>` with `<div class="field_with_errors">`. If you want to customize this behavior, you should listen to the `errors:field` event, and add your own custom handler.
 
 Here's an example when using bootstrap:
 
     $("form[remote_validation_url]").on("errors:field", function(jqEl, errors) {
       if (errors.length > 0) {
+        console.log("has errors");
       } else {
+        console.log("no errors");
       }
     });
 
