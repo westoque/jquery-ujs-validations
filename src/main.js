@@ -6,6 +6,7 @@
 
     $.ajax({
       url      : url,
+      data     : $form.serialize(),
       method   : 'POST',
       dataType : 'json',
       success  : function() {},
