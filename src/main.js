@@ -37,6 +37,7 @@
         if (isTargetForm) {
           $document.off("submit.ujs-validations");
           $form.submit();
+          return;
         }
 
         triggerErrorForOneField($form, $currentTarget, []);
