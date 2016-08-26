@@ -1,15 +1,43 @@
 (function($) {
 
-  function doRemoteValidationRequest($currentTarget) {
-    var $form = $currentTarget.parents('form[data-remote-validation-url]');
-    var url = $form.data('remoteValidationUrl');
+  var formSelector = 'form[data-remote-validation-url]';
+
+  function triggerErrorForAllFields($form, mapping) {
+    for (var name in mapping) {
+      var $field = $('[name="' + name + '"]');
+      if ($field.length > 0) {
+        triggerErrorForOneField($form, $field, mapping[name]);
+      }
+    }
+  }
+
+  function triggerErrorForOneField($form, $field, errors) {
+    $form.trigger('error:field', [$field, errors])
+  }
+
+  function doRemoteValidationRequest(evt) {
+    var $currentTarget, isTargetForm, form, url;
+
+    $currentTarget = $(evt.currentTarget);
+    isTargetForm = $currentTarget.prop('tagName') === "FORM";
+    $form = isTargetForm ? $currentTarget : $currentTarget.parents(formSelector);
+    url = $form.data('remoteValidationUrl');
+
+    // Don't submit until we don't have errors
+    if (isTargetForm) {
+      evt.preventDefault();
+    }
 
     $.ajax({
       url      : url,
       data     : $form.serialize(),
       method   : 'POST',
       dataType : 'json',
-      success  : function() {},
+      success  : function() {
+        if (isTargetForm) {
+          $form.submit();
+        }
+      },
       error    : function(evt) {
         var
           data = JSON.parse(evt.responseText),
@@ -26,9 +54,11 @@
           }
         }
 
-        errors = map[$currentTarget.attr("name")] || [];
-
-        $form.trigger("error:field", [$currentTarget, errors])
+        if (isTargetForm) {
+          triggerErrorForAllFields($form, map);
+        } else {
+          triggerErrorForOneField($form, $currentTarget, map[$currentTarget.attr('name')] || []);
+        }
       }
     });
   }
@@ -37,32 +67,31 @@
 
   // "blur" for <input type="text" />
   $document.on("blur.rails", "form[data-remote-validation-url] input[type=text]", function(evt) {
-    var $currentTarget = $(evt.currentTarget);
-    doRemoteValidationRequest($currentTarget);
+    doRemoteValidationRequest(evt);
   });
 
   // "blur" for <textarea>
   $document.on("blur.rails", "form[data-remote-validation-url] textarea", function(evt) {
-    var $currentTarget = $(evt.currentTarget);
-    doRemoteValidationRequest($currentTarget);
+    doRemoteValidationRequest(evt);
   });
 
   // "blur" for <select>
   $document.on("blur.rails", "form[data-remote-validation-url] select", function(evt) {
-    var $currentTarget = $(evt.currentTarget);
-    doRemoteValidationRequest($currentTarget);
+    doRemoteValidationRequest(evt);
   });
 
   // "change" for <select>
   $document.on("change.rails", "form[data-remote-validation-url] select", function(evt) {
-    var $currentTarget = $(evt.currentTarget);
-    doRemoteValidationRequest($currentTarget);
+    doRemoteValidationRequest(evt);
   });
 
   // "change" for <input type="radio">
   $document.on("change.rails", "form[data-remote-validation-url] input[type=radio]", function(evt) {
-    var $currentTarget = $(evt.currentTarget);
-    doRemoteValidationRequest($currentTarget);
+    doRemoteValidationRequest(evt);
+  });
+
+  $document.on("submit.rails", "form[data-remote-validation-url]", function(evt) {
+    doRemoteValidationRequest(evt);
   });
 
 })(jQuery);
