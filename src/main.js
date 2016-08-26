@@ -27,14 +27,14 @@
 
     $relatedTarget = $(evt.relatedTarget);
     $currentTarget = $(evt.currentTarget);
-    isRelatedTargetSubmit = $relatedTarget.is('input[type=submit]');
+    isRelatedTargetSubmit = $relatedTarget.attr('type') === 'submit'; // supports `<button>` and `<input>`
     isTargetForm = $currentTarget.is('form');
     $form = isTargetForm ? $currentTarget : $currentTarget.parents(formSelector);
     url = $form.data('remoteValidationUrl');
 
     // Delegate method to submit so we don't do a double validate
     // This will trigger a "submit" event.
-    if ($relatedTarget.is('input[type=submit]')) {
+    if (isRelatedTargetSubmit) {
       return;
     }
 
