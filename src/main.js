@@ -2,11 +2,15 @@
 
   var formSelector = 'form[data-remote-validation-url]';
 
-  function triggerErrorForAllFields($form, mapping) {
-    for (var name in mapping) {
-      var $field = $('[name="' + name + '"]');
+  function triggerErrorForAllFields($form, formMap, errorMap) {
+    var $field, errors;
+
+    for (var name in formMap) {
+      $field = $('[name="' + name + '"]');
+
       if ($field.length > 0) {
-        triggerErrorForOneField($form, $field, mapping[name]);
+        errors = errorMap[name] || [];
+        triggerErrorForOneField($form, $field, errors);
       }
     }
   }
@@ -16,17 +20,34 @@
   }
 
   function doRemoteValidationRequest(evt) {
-    var $currentTarget, isTargetForm, form, url;
+    var
+      $relatedTarget,
+      $currentTarget,
+      isTargetForm, form, url;
 
+    $relatedTarget = $(evt.relatedTarget);
     $currentTarget = $(evt.currentTarget);
-    isTargetForm = $currentTarget.prop('tagName') === "FORM";
+    isRelatedTargetSubmit = $relatedTarget.is('input[type=submit]');
+    isTargetForm = $currentTarget.is('form');
     $form = isTargetForm ? $currentTarget : $currentTarget.parents(formSelector);
     url = $form.data('remoteValidationUrl');
+
+    // Delegate method to submit so we don't do a double validate
+    // This will trigger a "submit" event.
+    if ($relatedTarget.is('input[type=submit]')) {
+      return;
+    }
 
     // Don't submit yet until later.
     if (isTargetForm) {
       evt.preventDefault();
     }
+
+    // Create form to javascript object mapping
+    var formMap = {};
+    $form.serializeArray().forEach(function(obj) {
+      formMap[obj.name] = obj.value;
+    });
 
     $.ajax({
       url      : url,
@@ -34,34 +55,38 @@
       method   : 'POST',
       dataType : 'json',
       success  : function() {
-        if (isTargetForm) {
+        if ($currentTarget.is('form')) {
+          triggerErrorForAllFields($form, formMap, {});
+        } else {
+          triggerErrorForOneField($form, $currentTarget, []);
+        }
+
+        if (isTargetForm || isRelatedTargetSubmit) {
           $document.off("submit.ujs-validations");
           $form.submit();
           return;
         }
-
-        triggerErrorForOneField($form, $currentTarget, []);
       },
       error    : function(evt) {
         var
+          errors,
           data = JSON.parse(evt.responseText),
-          map  = {},
-          errors;
+          errorsMap = {};
 
         for (var d in data) {
           if (Object.prototype.toString.call(data[d]) === '[object Array]') {
-            map[d] = data[d];
+            errorsMap[d] = data[d];
           } else {
             for (var attr in data[d]) {
-              map[d + "[" + attr + "]"] = data[d][attr];
+              errorsMap[d + "[" + attr + "]"] = data[d][attr];
             }
           }
         }
 
         if (isTargetForm) {
-          triggerErrorForAllFields($form, map);
+          triggerErrorForAllFields($form, formMap, errorsMap);
         } else {
-          triggerErrorForOneField($form, $currentTarget, map[$currentTarget.attr('name')] || []);
+          triggerErrorForOneField($form, $currentTarget, errorsMap[$currentTarget.attr('name')] || []);
         }
       }
     });
