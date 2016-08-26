@@ -38,6 +38,8 @@
           $document.off("submit.ujs-validations");
           $form.submit();
         }
+
+        triggerErrorForOneField($form, $currentTarget, []);
       },
       error    : function(evt) {
         var
