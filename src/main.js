@@ -114,6 +114,11 @@
     doRemoteValidationRequest(evt);
   });
 
+  // "change" for <input type="checkbox">
+  $document.on("change.ujs-validations", "form[data-remote-validation-url] input[type=checkbox]", function(evt) {
+    doRemoteValidationRequest(evt);
+  });
+
   // "change" for <input type="radio">
   $document.on("change.ujs-validations", "form[data-remote-validation-url] input[type=radio]", function(evt) {
     doRemoteValidationRequest(evt);
