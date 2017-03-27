@@ -1,0 +1,27 @@
+{
+  "name": "jquery-ujs-validations",
+  "version": "1.0.0",
+  "description": "Unobtrusive remote validations for jQuery",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/westoque/jquery-ujs-validations.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/westoque/jquery-ujs-validations/issues"
+  },
+  "homepage": "https://github.com/westoque/jquery-ujs-validations#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-jasmine": "^1.1.0",
+    "grunt-contrib-jshint": "^1.1.0"
+  }
+}
