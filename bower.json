@@ -6,6 +6,9 @@
   "description": "Allows remote validation of form fields using unobtrusive javascript and beautiful rails patterns.",
   "main": "src/main.js",
   "license": "MIT",
+  "dependencies": {
+    "jquery": ">1.8.*"
+  },
   "homepage": "",
   "ignore": [
     "**/.*",
