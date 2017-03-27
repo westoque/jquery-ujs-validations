@@ -5,7 +5,11 @@ module.exports = function(grunt) {
     jasmine : {
       src : 'src/**/*.js',
       options : {
-        specs : 'spec/**/*.js'
+        specs    : 'spec/**/*.js',
+        template : 'SpecRunner.html',
+        vendor   : [
+          'bower_components/jquery/dist/jquery.js'
+        ]
       }
     },
     jshint: {
