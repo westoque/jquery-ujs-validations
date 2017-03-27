@@ -16,7 +16,7 @@
   }
 
   function triggerErrorForOneField($form, $field, errors) {
-    $form.trigger('error:field', [$field, errors])
+    $form.trigger('error:field', [$field, errors]);
   }
 
   function doRemoteValidationRequest(evt) {
