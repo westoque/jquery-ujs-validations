@@ -2,6 +2,13 @@
 
   var formSelector = 'form[data-remote-validation-url]';
 
+  /**
+   * Normalizes the [name] attribute.
+  **/
+  function normalizeNameAttr(name) {
+    return name.replace(/\[\]/, '');
+  }
+
   function triggerErrorForAllFields($form, formMap, errorMap) {
     var $field, errors;
 
@@ -9,7 +16,7 @@
       $field = $('[name="' + name + '"]');
 
       if ($field.length > 0) {
-        errors = errorMap[name] || [];
+        errors = errorMap[normalizeNameAttr(name)] || [];
         triggerErrorForOneField($form, $field, errors);
       }
     }
@@ -86,7 +93,8 @@
         if (isTargetForm) {
           triggerErrorForAllFields($form, formMap, errorsMap);
         } else {
-          triggerErrorForOneField($form, $currentTarget, errorsMap[$currentTarget.attr('name')] || []);
+          const name = normalizeNameAttr($currentTarget.attr('name'));
+          triggerErrorForOneField($form, $currentTarget, errorsMap[name] || []);
         }
       }
     });
