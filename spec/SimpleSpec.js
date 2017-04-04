@@ -21,7 +21,7 @@ describe('Simple', function() {
     jasmine.Ajax.uninstall();
   });
 
-  it('shows errors for a checkbox with hidden field', function(done) {
+  it('shows errors for a checkbox without a hidden field', function(done) {
     var checkBoxArray = '<input type="checkbox" value="red" name="user[colors][]" id="user_colors_red">';
 
     injectForm(checkBoxArray);
@@ -41,7 +41,7 @@ describe('Simple', function() {
     resetForm();
   });
 
-  it('shows errors for a checkbox without hidden field', function(done) {
+  it('shows errors for a checkbox with a hidden field', function(done) {
     var checkBoxArray = '<input type="checkbox" value="red" name="user[colors][]" id="user_colors_red">' +
                         '<input type="hidden" name="user[colors][]" value="">';
 
