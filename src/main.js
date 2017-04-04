@@ -2,22 +2,34 @@
 
   var formSelector = 'form[data-remote-validation-url]';
 
-  /**
-   * Normalizes the [name] attribute.
-  **/
+  function checkBoxOrHiddenField($field) {
+    var sel = 'input[type="hidden"][name="' + $field.attr('name') + '"]';
+    var obj = $field.parents(formSelector).find(sel);
+    return obj.length ? obj : $field;
+  }
+
   function normalizeNameAttr(name) {
     return name.replace(/\[\]/, '');
   }
 
+  function normalizeField($field) {
+    if ($field.attr('type') === 'checkbox') {
+      return checkBoxOrHiddenField($field);
+    }
+
+    return $field;
+  }
+
   function triggerErrorForAllFields($form, formMap, errorMap) {
-    var $field, errors;
+    var name, $field, errors;
 
-    for (var name in formMap) {
-      $field = $('[name="' + name + '"]');
-
-      if ($field.length > 0) {
-        errors = errorMap[normalizeNameAttr(name)] || [];
-        triggerErrorForOneField($form, $field, errors);
+    for (name in formMap) {
+      if (formMap.hasOwnProperty(name)) {
+        $field = $('[name="' + name + '"]');
+        if ($field.length > 0) {
+          errors = errorMap[normalizeNameAttr(name)] || [];
+          triggerErrorForOneField($form, $field, errors);
+        }
       }
     }
   }
@@ -30,7 +42,9 @@
     var
       $relatedTarget,
       $currentTarget,
-      isTargetForm, form, url;
+      isTargetForm,
+      isRelatedTargetSubmit,
+      $form, url;
 
     $relatedTarget = $(evt.relatedTarget);
     $currentTarget = $(evt.currentTarget);
@@ -76,7 +90,6 @@
       },
       error    : function(evt) {
         var
-          errors,
           data = JSON.parse(evt.responseText),
           errorsMap = {};
 
@@ -85,7 +98,9 @@
             errorsMap[d] = data[d];
           } else {
             for (var attr in data[d]) {
-              errorsMap[d + "[" + attr + "]"] = data[d][attr];
+              if (data[d].hasOwnProperty(attr)) {
+                errorsMap[d + "[" + attr + "]"] = data[d][attr];
+              }
             }
           }
         }
@@ -93,8 +108,9 @@
         if (isTargetForm) {
           triggerErrorForAllFields($form, formMap, errorsMap);
         } else {
-          const name = normalizeNameAttr($currentTarget.attr('name'));
-          triggerErrorForOneField($form, $currentTarget, errorsMap[name] || []);
+          var name = normalizeNameAttr($currentTarget.attr('name'));
+          var $field = normalizeField($currentTarget);
+          triggerErrorForOneField($form, $field, errorsMap[name] || []);
         }
       }
     });
