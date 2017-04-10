@@ -7,6 +7,7 @@
     "example": "examples"
   },
   "scripts": {
+    "dist": "grunt dist",
     "test": "grunt test"
   },
   "repository": {
@@ -20,9 +21,15 @@
   },
   "homepage": "https://github.com/westoque/jquery-ujs-validations#readme",
   "devDependencies": {
+    "babel-plugin-transform-es2015-modules-umd": "^6.24.0",
+    "babel-preset-es2015": "^6.24.0",
     "grunt": "^1.0.1",
+    "grunt-babel": "^6.0.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-jasmine": "^1.1.0",
     "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^2.3.0",
     "jasmine-ajax": "^3.3.1"
   }
 }
