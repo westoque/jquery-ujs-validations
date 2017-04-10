@@ -28,6 +28,7 @@
         $field = $('[name="' + name + '"]');
         if ($field.length > 0) {
           errors = errorMap[normalizeNameAttr(name)] || [];
+          $field = normalizeField($field);
           triggerErrorForOneField($form, $field, errors);
         }
       }
