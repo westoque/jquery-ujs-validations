@@ -54,15 +54,15 @@
     $form = isTargetForm ? $currentTarget : $currentTarget.parents(formSelector);
     url = $form.data('remoteValidationUrl');
 
-    // Delegate method to submit so we don't do a double validate
-    // This will trigger a "submit" event.
     if (isRelatedTargetSubmit) {
       return;
     }
 
     // Don't submit yet until later.
     if (isTargetForm) {
+      $form.off("submit");
       evt.preventDefault();
+      evt.stopPropagation();
     }
 
     // Create form to javascript object mapping
@@ -85,11 +85,11 @@
 
         if (isTargetForm || isRelatedTargetSubmit) {
           $document.off("submit.ujs-validations");
+          $form.on("submit");
           $form.submit();
-          return;
         }
       },
-      error    : function(evt) {
+      error: function(evt) {
         var
           data = JSON.parse(evt.responseText),
           errorsMap = {};
