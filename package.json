@@ -1,6 +1,6 @@
 {
   "name": "jquery-ujs-validations",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Unobtrusive remote validations for jQuery",
   "main": "index.js",
   "directories": {
