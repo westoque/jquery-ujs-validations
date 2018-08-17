@@ -36,7 +36,7 @@
   }
 
   function triggerErrorForOneField($form, $field, errors) {
-    $form.trigger('error:field', [$field, errors]);
+    $form.trigger('validation:error', [$field, errors]);
   }
 
   function doRemoteValidationRequest(evt) {
@@ -54,13 +54,14 @@
     $form = isTargetForm ? $currentTarget : $currentTarget.parents(formSelector);
     url = $form.data('remoteValidationUrl');
 
+    $form.trigger('validation:before', [$form]);
+
     if (isRelatedTargetSubmit) {
       return;
     }
 
     // Don't submit yet until later.
     if (isTargetForm) {
-      $form.off("submit");
       evt.preventDefault();
       evt.stopPropagation();
     }
@@ -85,8 +86,8 @@
 
         if (isTargetForm || isRelatedTargetSubmit) {
           $document.off("submit.ujs-validations");
-          $form.on("submit");
-          $form.submit();
+          $form.trigger('validation:success', [$form]);
+          $form.trigger("submit");
         }
       },
       error: function(evt) {
